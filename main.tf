@@ -45,3 +45,39 @@ resource "aws_route_table_association" "rt-association" {
   route_table_id = "${aws_route_table.route-table.id}"
 }
 
+resource "aws_security_group" "elasticsearch-sg" {
+  name_prefix        = "elastic-search-sg-"
+  description = "Allow TLS inbound traffic"
+  vpc_id      = "${aws_vpc.es-vpc.id}"
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.whitelist-cidr]
+  }
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    self        = true
+  }
+    ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.whitelist-cidr]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+}
+
+
+
+
+
+
