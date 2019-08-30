@@ -34,7 +34,9 @@ The terraform template will launch elastic search cluster on AWS using EC2 VM.
 
 2. make sure you switch to directory `new-certs` before running following curl 
    command:
-`$ curl https://myelasticsearch.com:9200/_cluster/health?pretty --key dev.key --cert dev.crt --cacert myCA.pem -u devops:rX4OhbsPOyPRLSrwCcMi`
+```
+$ curl https://myelasticsearch.com:9200/_cluster/health?pretty --key dev.key --cert dev.crt --cacert myCA.pem -u devops:rX4OhbsPOyPRLSrwCcMi
+```
 Response should be:
 ```
 
@@ -64,6 +66,8 @@ Response should be:
 
 1. Elastic search uses `file` based authentication.
 2. For testing purpose, the certificates are created using openssl CA
+```
 ref: https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
+```
 3. The cenrtificate has two domains 1. localhost 2. myelasticsearch.com
    In real world, the certificates will be provided by known CA with authentic domain.
