@@ -9,9 +9,9 @@ The terraform template will launch elastic search cluster on AWS using EC2 VM.
    provider section. This is the user with which terraform will create resources. This needs to have `ec2 full access`, `iam full access`, `s3 access` broadly. This can be narrowed down based on least privileges. `s3 full access` is required if you choose to upload dependencies on S3 using the script provided below.
 3. Create `aws pem file` so that you can login to instances using `ssh`. Provide its name in `variables.tf`
 4. All files under `conf` directory are to be uploaded to S3 bucket for e.g 
-   `s3://elasticsearch-config`. This are referred by `init.tpl` at runtime.
+   `s3://elasticsearch-config`. These are referred by `init.tpl` at runtime.
 5. Script `upload-files-to-s3.sh` can do this for you. It uploads files to S3 for 
-   first time usage privided you have `awscli` configured with access/secret keys. This can be done from aws console too.
+   first time usage provided you have `awscli` configured with access/secret keys. This can be done from aws console too.
 6. Have your machine's public IP handy!
 
 ### Files
