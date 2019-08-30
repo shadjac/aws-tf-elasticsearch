@@ -6,15 +6,19 @@ The terraform template will launch elastic search cluster on AWS using EC2 VM.
 ### Pre-requisites
 1. Install terraform binary and add to `PATH`
 2. Create AWS ACCESS and SECRET key pair and edit the `main.tf` `aws` provider section.
-3. Create `aws pem file` so that you can login to instances using `ssh`.
-4. All files under `conf` directory are to be uploaded to S3 bucket for e.g `s3://elasticsearch-config`. This are  
-   referred by `bootstrap.sh` at runtime.
+3. Create `aws pem file` so that you can login to instances using `ssh`. Provide its name in `variables.tf`
+4. All files under `conf` directory are to be uploaded to S3 bucket for e.g 
+   `s3://elasticsearch-config`. This are referred by `init.tpl` at runtime.
 5. Script `upload-files-to-s3.sh` can do this for you. It uploads files to S3 for 
    first time usage privided you have `awscli` configured with access/secret keys. This can be done from aws console too.
+6. Have your machine's public IP handy!
 
 ### Files
-1. `main.tf` : terraform file
-2. `bootstrap.sh` : script that bootstraps the server at boot. The content should be base64 encoded which is then used in `main.tf` under `resource "aws_launch_configuration" "es-launch-conf"`
+1. `main.tf` : terraform root module
+2. `files/init.tpl` : script that bootstraps the server at boot.
+3. `iam.tf` : In case of more than one node in cluster, using ec2 discovery plugin, 
+    certain permissions to be given to each node. 
+4. `variables.tf` : Edit this file as per requirement. For now, traffic is allowed from only `whitelisted cidr`.
 
 ### Steps
 - `git clone https://github.com/shadjac/elasticsearch-terraform.git`
@@ -27,7 +31,8 @@ The terraform template will launch elastic search cluster on AWS using EC2 VM.
 1. add `public_ip` of the elastic search node in /etc/hosts as follows:
 `10.2.13.120 myelasticsearch.com`
 
-2. run curl command using elasticsearch APIs-
+2. make sure you switch to directory `new-certs` before running following curl 
+   command:
 `$ curl https://myelasticsearch.com:9200/_cluster/health?pretty --key dev.key --cert dev.crt --cacert myCA.pem -u devops:rX4OhbsPOyPRLSrwCcMi`
 Response should be:
 `
@@ -48,8 +53,7 @@ Response should be:
   "task_max_waiting_in_queue_millis" : 0,
   "active_shards_percent_as_number" : 100.0
 }`
-3. make sure you switch to directory `new-certs`
-4. devops user is preconfigured for testing purpose
+3. devops user is preconfigured for testing purpose
 
 
 ### Implementation
